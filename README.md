@@ -11,6 +11,7 @@ Lightest implementation of promise library in JavaScript, Minified version is on
 
 
 #Create defered function
+```javascript
 function method1(val){
 	var deferred = new Deferred();
 	setTimeout(function(){
@@ -26,6 +27,7 @@ function method2(){
   },10000)
 	return deferred.promise;
 }
+```
 
 #calling deferred methods
 
