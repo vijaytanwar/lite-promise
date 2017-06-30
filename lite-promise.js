@@ -1,6 +1,6 @@
 /**
  * Lightest Javascript promise library.
- * version 1.1
+ * version 1.0
  * Author{{Vijay Singh}}
  * Email{{VijayTamar@live.in}}
  */
@@ -49,6 +49,20 @@
         this.call = function (params) {
             var promise;
             for (var i = 0; i < funcs.length; i++) {
+                //jQuery ajax promise support
+                if (typeof funcs[i] == "object" && "done" in funcs[i] && "fail" in funcs[i]) {
+                    var deferred = new Deferred();
+                    promises.push(deferred.promise);
+                    deferred.promise.push = pushPromiseData.bind(deferred.promise, i);
+
+                    funcs[i].done(function (response) {
+                        deferred.resolve(response);
+                    }).fail(function (response) {
+                        deferred.promise.hasError = true;
+                        deferred.reject(response);
+                    });
+                    continue;
+                }
                 if (params[i]) {
                     promise = funcs[i].apply(self, params[i]);
                 } else {
@@ -87,30 +101,32 @@
         }, 0);
         return defer;
     }
-    context.when = function () {
-        return when(arguments);
+    context.lp = {
+        when: function () {
+            return when(arguments);
+        },
+        Deferred: Deferred,
+
+        /**
+         * dynamicPromise convert the normal function to promise function
+         * function return value will be passed in promise resolve
+         * and any exception will be be passed in promise reject
+         */
+        dynamic: function (func) {
+            return function () {
+                var deferred = new Deferred(),
+                    args = arguments;
+                setTimeout(function () {
+                    try {
+                        var returnVal = func.apply({}, args);
+                        deferred.resolve(returnVal);
+                    } catch (ex) {
+                        deferred.reject(ex);
+                    }
+                }, 0);
+
+                return deferred.promise;
+            };
+        }
     }
-    context.Deferred = Deferred;
-
-    /**
-     * dynamicPromise convert the normal function to promise function
-     * function return value will be passed in promise resolve
-     * and any exception will be be passed in promise reject
-     */
-    context.dynamicPromise = function (func) {
-        return function () {
-            var deferred = new Deferred(),
-                args = arguments;
-            setTimeout(function () {
-                try {
-                    var returnVal = func.apply({}, args);
-                    deferred.resolve(returnVal);
-                } catch (ex) {
-                    deferred.reject(ex);
-                }
-            }, 0);
-
-            return deferred.promise;
-        };
-    };
 }(window));
