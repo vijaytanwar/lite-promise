@@ -32,7 +32,7 @@ function method2(){
 
 ### calling deferred methods
 ```javascript
-when(method1, method2)
+lp.when(method1, method2)
 .success(function(method1Response, method2Response){
 }).error(function(errorMessage1, errorMessage2){
 });
@@ -40,7 +40,7 @@ when(method1, method2)
 
 ### Getting status of task completed
 ```javascript
-when(task1, task2)
+lp.when(task1, task2)
 .progress(function(taskIndex, taskResponse){})
 .success(function(status1, status2){})
 .error(function(error1, error2){});
@@ -48,7 +48,7 @@ when(task1, task2)
 
 ### configure the individual task parameters
 ```javascript
-when(task1, task2)
+lp.when(task1, task2)
 .params([parameter list for task1], [parameter list for task 2])
 .progress(function(index, response){console.log(index,response);})
 .success(function(status1, status2){})
@@ -56,9 +56,15 @@ when(task1, task2)
 ```
 ### dynamic promise
 ```javascript
-when(dynamicPromise(task1), task2)
+lp.when(dynamic(task1), task2)
 .params([parameter list for task1], [parameter list for task 2])
 .progress(function(index, response){console.log(index,response);})
+.success(function(status1, status2){})
+.error(function(error1, error2){});
+```
+### jQuery ajax promise support
+```javascript
+lp.when($.ajax(url:"todo.txt"), task2)
 .success(function(status1, status2){})
 .error(function(error1, error2){});
 ```
