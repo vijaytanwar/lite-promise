@@ -77,6 +77,7 @@ var allRunningTask = lp.when($.ajax(url:"todo.txt"), task2)
 .error(function(error1, error2){});
 
 allRunningTask.cancel();
+```
 
 #### I am working to improve this library, so your suggestion are much appreciated.
 
