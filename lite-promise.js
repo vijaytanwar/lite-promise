@@ -1,6 +1,6 @@
 /**
  * Lightest Javascript promise library.
- * version 1.0
+ * version 1.1
  * Author{{Vijay Singh}}
  * Email{{VijayTamar@live.in}}
  */
@@ -91,4 +91,26 @@
         return when(arguments);
     }
     context.Deferred = Deferred;
+
+    /**
+     * dynamicPromise convert the normal function to promise function
+     * function return value will be passed in promise resolve
+     * and any exception will be be passed in promise reject
+     */
+    context.dynamicPromise = function (func) {
+        return function () {
+            var deferred = new Deferred(),
+                args = arguments;
+            setTimeout(function () {
+                try {
+                    var returnVal = func.apply({}, args);
+                    deferred.resolve(returnVal);
+                } catch (ex) {
+                    deferred.reject(ex);
+                }
+            }, 0);
+
+            return deferred.promise;
+        };
+    };
 }(window));
