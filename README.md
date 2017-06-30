@@ -67,7 +67,15 @@ lp.when(dynamic(task1), task2)
 lp.when($.ajax(url:"todo.txt"), task2)
 .success(function(status1, status2){})
 .error(function(error1, error2){});
+
 ```
+
+### cancel all promise
+```javascript
+lp.when($.ajax(url:"todo.txt"), task2)
+.success(function(status1, status2){})
+.error(function(error1, error2){})
+.cancel();
 
 #### I am working to improve this library, so your suggestion are much appreciated.
 
