@@ -54,6 +54,14 @@ when(task1, task2)
 .success(function(status1, status2){})
 .error(function(error1, error2){});
 ```
+### dynamic promise
+```javascript
+when(dynamicPromise(task1), task2)
+.params([parameter list for task1], [parameter list for task 2])
+.progress(function(index, response){console.log(index,response);})
+.success(function(status1, status2){})
+.error(function(error1, error2){});
+```
 
 #### I am working to improve this library, so your suggestion are much appreciated.
 
