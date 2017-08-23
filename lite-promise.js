@@ -6,15 +6,40 @@
  */
 
 (function (context) {
-    function Deferred() {
-        this.promise = {};
-    }
-    Deferred.prototype.resolve = function (data) {
-        this.promise.push(data);
+    function Promise() { }
+    Promise.prototype = {
+        success:function (callback) {
+            this.successCall = callback;
+            return this;
+        },
+        error: function (callback) {
+            this.errorCall = callback;
+            return this;
+        }
     };
-    Deferred.prototype.reject = function (data) {
-        this.promise.hasError = true;
-        this.promise.push(data);
+   
+    function Deferred() {
+        this.promise = new Promise();
+    }
+    Deferred.prototype = {
+        resolve:function (data) {
+            //push will not be there without promise;
+            if (this.promise.push) {
+                this.promise.push(data);
+            }
+            if (this.promise.successCall) {
+                this.promise.successCall(data);
+            }
+        },
+        reject:function (data) {
+            this.promise.hasError = true;
+            if (this.promise.push) {
+                this.promise.push(data);
+            }
+            if (this.promise.errorCall) {
+                this.promise.errorCall(data);
+            }
+        }
     };
 
     /**
@@ -73,26 +98,28 @@
             }
         }
     };
-    Defer.prototype.success = function (func) {
-        this.successCall = func;
-        return this;
+    Defer.prototype = {
+        success:function (func) {
+            this.successCall = func;
+            return this;
+        },
+        error: function (func) {
+            this.errorCall = func;
+            return this;
+        },
+        progress: function (func) {
+            this.updateProgress = func;
+            return this;
+        },
+        cancel: function () {
+            this.cancelled = true;
+            return this;
+        },
+        params: function () {
+            this.params = arguments;
+            return this;
+        }
     };
-    Defer.prototype.error = function (func) {
-        this.errorCall = func;
-        return this;
-    };
-    Defer.prototype.progress = function (func) {
-        this.updateProgress = func;
-        return this;
-    }
-    Defer.prototype.cancel = function () {
-        this.cancelled = true;
-        return this;
-    };
-    Defer.prototype.params = function () {
-        this.params = arguments;
-        return this;
-    }
 
     function when(args) {
         var defer = new Defer(args);
